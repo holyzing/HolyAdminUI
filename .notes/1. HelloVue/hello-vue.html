@@ -1,0 +1,56 @@
+<!-- 无需构建的情况下使用Vue，这种情况下不能使用 SFC 单页面组件 -->
+
+<!-- 1. 使用了全局构建版本的 Vue，该版本的所有顶层 API 都以属性的形式暴露在了全局的 Vue 对象上 -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<div id="app1">{{ message }}</div>
+<script>
+  const { createApp } = Vue
+
+  createApp({
+    data() {
+      return {
+        message: 'Hello Vue!'
+      }
+    }
+  }).mount('#app1')
+</script>
+
+<!-- 2. 使用 ES 模块语法。现代浏览器大多都已原生支持 ES 模块。因此通过 CDN 以及原生 ES 模块使用 Vue  -->
+<div id="app2">{{ message }}</div>
+
+<script type="module">
+  import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+  createApp({
+    data() {
+      return {
+        message: 'Hello Vue!'
+      }
+    }
+  }).mount('#app2')
+</script>
+
+<!-- 3. 使用导入映射表 (Import Maps) 来告诉浏览器如何定位到导入的 vue
+        可以在映射表中添加其他的依赖——但请务必确保你使用的是该库的 ES 模块版本
+-->
+<script type="importmap">
+  {
+    "imports": {
+      "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+    }
+  }
+</script>
+
+<div id="app3">{{ message }}</div>
+
+<script type="module">
+  import { createApp as ca2 } from 'vue'
+
+  ca2({
+    data() {
+      return {
+        message: 'Hello Vue!'
+      }
+    }
+  }).mount('#app3')
+</script>

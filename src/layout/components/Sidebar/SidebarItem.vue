@@ -27,9 +27,9 @@
 <script>
 import path from 'path'
 import { isExternal } from '@/utils/validate'
-import Item from './Item'
-import AppLink from './Link'
-import FixiOSBug from './FixiOSBug'
+import Item from './Item.vue'
+import AppLink from './Link.vue'
+import FixiOSBug from './FixiOSBug.js'
 
 export default {
   name: 'SidebarItem',

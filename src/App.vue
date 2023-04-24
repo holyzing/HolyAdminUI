@@ -1,14 +1,13 @@
 <template>
-  <div id="app">
-    <router-view />
-  </div>
+  <RouterView />
 </template>
 
-<script>
-export default {
-  name: 'App'
-}
+<script setup>
+import { RouterView } from 'vue-router'
 </script>
+
+<!-- Single file component can contain only one <script> element -->
+<!--
 <script>
 // 声明: 百度统计统计相关下载使用量无别的用途
 // 可自行删除
@@ -20,4 +19,4 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
+ -->

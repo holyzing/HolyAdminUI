@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
@@ -50,7 +50,7 @@ service.interceptors.response.use(
       if (location.href.indexOf('login') !== -1) {
         location.reload() // 为了重新实例化vue-router对象 避免bug
       } else {
-        MessageBox.confirm(
+        ElMessageBox.confirm(
           '登录状态已过期，您可以继续留在该页面，或者重新登录',
           '系统提示',
           {
@@ -64,7 +64,7 @@ service.interceptors.response.use(
       }
     } else if (code === 6401) {
       store.dispatch('user/resetToken')
-      MessageBox.confirm(
+      ElMessageBox.confirm(
         '登录状态已过期，您可以继续留在该页面，或者重新登录',
         '系统提示',
         {
@@ -77,7 +77,7 @@ service.interceptors.response.use(
       })
       return false
     } else if (code === 400 || code === 403) {
-      Message({
+      ElMessage({
         message: response.data.msg,
         type: 'error',
         duration: 5 * 1000
@@ -86,7 +86,7 @@ service.interceptors.response.use(
       // Notification.error({
       //   title: response.data.msg
       // })
-      Message({
+      ElMessage({
         message: response.data.msg,
         type: 'error'
       })
@@ -97,7 +97,7 @@ service.interceptors.response.use(
   },
   error => {
     if (error.message === 'Network Error') {
-      Message({
+      ElMessage({
         message: '服务器连接异常，请检查服务器！',
         type: 'error',
         duration: 5 * 1000
@@ -106,7 +106,7 @@ service.interceptors.response.use(
     }
     console.log('err' + error) // for debug
 
-    Message({
+    ElMessage({
       message: error.message,
       type: 'error',
       duration: 5 * 1000

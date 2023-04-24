@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 export default {
   name: 'MenuItem',
   functional: true,
@@ -21,6 +21,7 @@ export default {
     }
 
     if (title) {
+    // NOTE https://zhuanlan.zhihu.com/p/471966642
       vnodes.push(<span slot='title'>{(title)}</span>)
     }
     return vnodes
