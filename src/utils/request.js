@@ -1,11 +1,13 @@
 import axios from 'axios'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import store from '@/store'
+// import store from '@/store/index.js'
 import { getToken } from '@/utils/auth'
-
+import { useUserStore } from '@/pinia'
 // create an axios instance
+
+console.log(process.env, import.meta.env)
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: process.env.VITE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 10000 // request timeout
 })
@@ -14,8 +16,8 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-
-    if (store.getters.token) {
+    const userStore = useUserStore()
+    if (userStore.token) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
@@ -45,8 +47,10 @@ service.interceptors.response.use(
    */
   response => {
     const code = response.data.code
+    const userStore = useUserStore()
     if (code === 401) {
-      store.dispatch('user/resetToken')
+      userStore.resetToken()
+      // store.dispatch('user/resetToken')
       if (location.href.indexOf('login') !== -1) {
         location.reload() // 为了重新实例化vue-router对象 避免bug
       } else {
@@ -63,7 +67,8 @@ service.interceptors.response.use(
         })
       }
     } else if (code === 6401) {
-      store.dispatch('user/resetToken')
+      userStore.resetToken()
+      // store.dispatch('user/resetToken')
       ElMessageBox.confirm(
         '登录状态已过期，您可以继续留在该页面，或者重新登录',
         '系统提示',

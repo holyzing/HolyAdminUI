@@ -1,6 +1,6 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 import { getRoutes } from '@/api/admin/sys-role'
-import Layout from '@/layout'
+import Layout from '@/layout/index.vue'
 // import sysuserindex from '@/views/sysuser/index'
 
 /**

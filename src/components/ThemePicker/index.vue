@@ -8,7 +8,11 @@
 </template>
 
 <script>
-const version = require('element-ui/package.json').version // element-ui version from node_modules
+// https://segmentfault.com/q/1010000042816822/a-1020000042816824
+// https://www.cnblogs.com/wang715100018066/p/16597860.html
+// NTOE 使用了 vite 编译, Script 中不应该 有 require
+// const version = require('element-ui/package.json').version // element-ui version from node_modules
+const version = import.meta.glob('element-plus/package.json').version
 const ORIGINAL_THEME = '#1890FF' // default color
 
 export default {

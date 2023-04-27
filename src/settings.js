@@ -1,4 +1,6 @@
-module.exports = {
+// NOTE Vite 不支持 commonJS 和 ES 混用
+export default {
+// module.exports = {
   title: 'go-admin后台管理系统',
 
   /**

@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia' // 替代 Vuex 进行状态管理
-
+import { createPinia } from 'pinia'
 // NOTE 浏览器样式统一与修复 https://github.com/necolas/normalize.css
 import 'normalize.css/normalize.css'
 // NOTE https://codemirror.net/ 已经发布了版本 6，版本六中没有这个 css 文件
@@ -13,6 +12,7 @@ import 'remixicon/fonts/remixicon.css'
 // import Viser from 'viser-vue'             // NOTE 数据可视化组件（绘制饼图），不兼容vue3, 可使用 g2plot 替代
 import Cookies from 'js-cookie' // NOTE 处理 cookie 的工具库
 // import Element from 'element-ui'          // NOTE 基于 vue2 的强大的 UI 组件库， Vue3 使用 element-plus
+import 'element-plus/dist/index.css'
 import Element from 'element-plus' // NOTE 基于 vue3 的强大的 UI 组件库   https://element-plus.gitee.io/zh-CN/guide/design.html
 // import VueParticles from 'vue-particles'  // NOTE 2018年 最后一次更新的 动态粒子特效插件，并没有说明支持 vue3，使用 particles.vue3 代替
 import VueParticles from 'particles.vue3' // NOTE 依赖 vue-particles 实现的 支持 Vue3 的动态粒子特效
@@ -32,20 +32,18 @@ import VueCodemirror from 'vue-codemirror' // NOTE 封装了 codemirror 的 vue 
 
 import App from './App.vue'
 // TODO import store from './store'
-import router from './router'
-import permission from './directive/permission'
-import * as filters from './filters' // global filters
+import router from './router/index.js'
+import permission from './directive/permission/index.js'
 
-import './icons' // icon
-import './permission' // permission control
-import './utils/error-log' // error log
+// import './icons/index.js' // 引入 icons
+import './permission.js' // permission control
+import './utils/error-log.js' // error log
 import './styles/element-variables.scss'
 // ------------------------------------------------------------------
 
-import '@/utils/dialog'
-import { getDicts } from '@/api/admin/dict/data'
-import { getItems, setItems } from '@/api/table'
-import { getConfigKey } from '@/api/admin/sys-config'
+import { getDicts } from '@/api/admin/dict/data.js'
+import { getItems, setItems } from '@/api/table.js'
+import { getConfigKey } from '@/api/admin/sys-config.js'
 import {
   parseTime,
   resetForm,
@@ -58,6 +56,8 @@ import '@/styles/index.scss' // global css
 import '@/styles/admin.scss'
 import Pagination from '@/components/Pagination/index.vue'
 import BasicLayout from '@/layout/BasicLayout.vue'
+import 'virtual:svg-icons-register'
+import SvgIcon from '@/components/SvgIcon/index.vue'// svg component
 // ------------------------------------------------------------------
 
 const app = createApp(App)
@@ -86,10 +86,14 @@ app.provide('selectDictLabel', selectDictLabel)
 app.provide('selectItemsLabel', selectItemsLabel)
 
 // 插件安装
+
+// import store from './store/index.js'
+// app.use(store)
+
 // VUE2 Vue.use(Viser)
 app.use(router)
-app.use(createPinia())
 app.use(permission)
+app.use(createPinia())
 // app.use(Viser)
 // app.use(VueDND)
 app.use(VueParticles)
@@ -100,6 +104,7 @@ app.use(Element, { size: Cookies.get('size') || 'medium' }) // set element-ui de
 // VUE2 Vue.component('Pagination', Pagination)
 app.component('Pagination', Pagination)
 app.component('BasicLayout', BasicLayout)
+app.component('svg-icon', SvgIcon)
 
 // VUE2 Vue.config.productionTip = false
 // TODO 使用 symbol
@@ -127,9 +132,14 @@ https://github.com/go-admin-team/go-admin-ui
 向我们反馈，谢谢！`)
 
 // VUE2 Object.keys(filters).forEach((key) => { Vue.filter(key, filters[key]) })
-Object.keys(filters).forEach((key) => {
-  app.filter(key, filters[key])
-})
+
+// https://www.mulingyuer.com/archives/832/
+// import * as filters from './filters/index.js' // global filters
+// Object.keys(filters).forEach((key) => {
+//   app.filter(key, filters[key])
+// })
 
 // VUE2 new Vue({ el: '#app', router, store, render: (h) => h(App) })
 app.mount('#app') // 返回根组件实例, 可以链式调用
+
+// https://blog.csdn.net/weixin_44869002/article/details/113176068

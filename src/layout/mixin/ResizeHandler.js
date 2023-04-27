@@ -1,4 +1,4 @@
-import store from '@/store'
+// import store from '@/store/index.js'
 
 const { body } = document
 const WIDTH = 992 // refer to Bootstrap's responsive design

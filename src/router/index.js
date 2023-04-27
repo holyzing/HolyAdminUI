@@ -1,7 +1,9 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+// import Vue from 'vue'
+// import Router from 'vue-router'
 
-Vue.use(Router)
+// Vue.use(Router)
+
+import { createRouter, createWebHistory } from 'vue-router'
 
 /* Layout */
 import Layout from '@/layout/index.vue'
@@ -52,7 +54,7 @@ export const constantRoutes = [
   },
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: () => import('@/views/login/index.vue'),
     hidden: true
   },
   {
@@ -77,7 +79,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
+        component: () => import('@/views/dashboard/index.vue'),
         name: 'Dashboard',
         meta: { title: '首页', icon: 'dashboard', affix: true }
       }
@@ -91,7 +93,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/profile/index'),
+        component: () => import('@/views/profile/index.vue'),
         name: 'Profile',
         meta: { title: '个人中心', icon: 'user', noCache: true }
       }
@@ -107,17 +109,23 @@ export const asyncRoutes = [
 
 ]
 
-const createRouter = () => new Router({
-  mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+// const createRouter = () => new Router({
+//   mode: 'history', // require service support
+//   scrollBehavior: () => ({ y: 0 }),
+//   routes: constantRoutes
+// })
 
-const router = createRouter()
+const routerOptions = {
+    history: createWebHistory(), // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  }
+const router = createRouter(routerOptions)
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
+  const newRouter = createRouter(routerOptions)
+  // NOTE vue-router4 https://juejin.cn/column/7140106983243251726
   router.matcher = newRouter.matcher // reset router
 }
 

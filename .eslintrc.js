@@ -33,7 +33,7 @@ module.exports = {
     'vue/singleline-html-element-content-newline': 'off',
     'vue/multiline-html-element-content-newline': 'off',
     // 'vue/name-property-casing': ['error', 'PascalCase'],
-    'vue/component-definition-name-casing': ['error', 'PascalCase'],
+    'vue/component-definition-name-casing': ['error', "PascalCase" | "kebab-case"],
     'vue/no-v-html': 'off',
     'vue/multi-word-component-names': 'off',
     'accessor-pairs': 2,

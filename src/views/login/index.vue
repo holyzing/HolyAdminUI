@@ -25,6 +25,7 @@
       <div class="login-left">
         <div class="login-time" v-text="currentTime" />
         <img :src="sysInfo.sys_app_logo" alt="" class="img">
+        <!-- <img :src="loginLogo" alt="" class="img"> -->
         <p class="title" v-text="sysInfo.sys_app_name" />
       </div>
       <div class="login-border">
@@ -40,7 +41,12 @@
           >
             <el-form-item prop="username">
               <span class="svg-container">
-                <i class="el-icon-user" />
+                <!-- elemenPlus 中 el-icon 用法发生了改变：
+                    https://blog.csdn.net/weixin_39415598/article/details/125440276
+                    几种使用方式 https://blog.csdn.net/admans/article/details/128032155
+                -->
+                <!-- <i class="el-icon-user" /> -->
+                <el-icon><User /></el-icon>
               </span>
               <el-input
                 ref="username"
@@ -183,11 +189,15 @@
 <script>
 import { getCodeImg } from '@/api/login'
 import moment from 'moment'
-import SocialSign from './components/SocialSignin'
+import SocialSign from './components/SocialSignin.vue'
+import { useSystemStore } from '@/pinia'
+// NOTE 选项式 API 不能做该类引用
+// import loginLogo from '@/assets/logo/logo.png'
+import { User } from '@element-plus/icons-vue'
 
 export default {
   name: 'Login',
-  components: { SocialSign },
+  components: { SocialSign, User },
   data() {
     return {
       codeUrl: '',
@@ -257,7 +267,9 @@ export default {
   },
   methods: {
     getSystemSetting() {
-      this.$store.dispatch('system/settingDetail').then((ret) => {
+        const systemStore = useSystemStore()
+      // this.$store.dispatch('system/settingDetail').then((ret) => {
+        systemStore.settingDetail().then((ret) => {
         this.sysInfo = ret
         document.title = ret.sys_app_name
       })
@@ -593,6 +605,7 @@ $cursor: #fff;
       background: transparent;
       border: 0px;
       -webkit-appearance: none;
+      appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
       color: #333;

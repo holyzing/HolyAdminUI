@@ -1,6 +1,10 @@
-import Vue from 'vue'
+// import Vue from 'vue'
+// https://juejin.cn/post/7037014666190520357
+// https://blog.csdn.net/Peanutfight/article/details/124135902
+
 // v-dialogDrag: 弹窗拖拽属性
-Vue.directive('dialogDrag', {
+// Vue.directive('dialogDrag', {
+export default {
   bind(el, binding, vnode, oldVnode) {
     const dialogHeaderEl = el.querySelector('.el-dialog__header')
     const dragDom = el.querySelector('.el-dialog')
@@ -73,4 +77,5 @@ Vue.directive('dialogDrag', {
       return false
     }
   }
-})
+}
+
