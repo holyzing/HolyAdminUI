@@ -1,6 +1,6 @@
-import { login, logout, getInfo, refreshtoken } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import router, { resetRouter } from '@/router'
+import { login, logout, getInfo, refreshtoken } from '@/api/user.js'
+import { getToken, setToken, removeToken } from '@/utils/auth.js'
+import router, { resetRouter } from '@/router/index.js'
 import storage from '@/utils/storage'
 import { defineStore } from 'pinia'
 
@@ -16,31 +16,6 @@ const state = {
   permisaction: []
 }
 
-const mutations = {
-  SET_TOKEN: (token) => {
-    this.token = token
-  },
-  SET_INTRODUCTION: (introduction) => {
-    this.introduction = introduction
-  },
-  SET_NAME: (name) => {
-    this.name = name
-  },
-  SET_AVATAR: (avatar) => {
-    if (avatar.indexOf('http') !== -1) {
-      this.avatar = avatar
-    } else {
-      this.avatar = process.env.VUE_APP_BASE_API + avatar
-    }
-  },
-  SET_ROLES: (roles) => {
-    this.roles = roles
-  },
-  SET_PERMISSIONS: (permisaction) => {
-    this.permisaction = permisaction
-  }
-}
-
 const actions = {
   // user login
   login(userInfo) {
@@ -48,7 +23,7 @@ const actions = {
       login(userInfo)
         .then((response) => {
           const { token } = response
-          this.SET_TOKEN(token)
+          this.token = token
           setToken(token)
           resolve()
         })
@@ -64,7 +39,7 @@ const actions = {
       getInfo()
         .then((response) => {
           if (!response || !response.data) {
-            this.SET_TOKEN('')
+            this.token = ''
             removeToken()
             resolve()
           }
@@ -75,12 +50,16 @@ const actions = {
           if (!roles || roles.length <= 0) {
             reject('getInfo: roles must be a non-null array!')
           }
-          this.SET_PERMISSIONS(permissions)
-          this.SET_ROLES(roles)
-          this.SET_NAME(name)
-          this.SET_AVATAR(avatar)
-          this.SET_INTRODUCTION(introduction)
-          resolve(response)
+          this.permissions = permissions
+          this.roles = roles
+          this.name = name
+          if (avatar.indexOf('http') !== -1) {
+            this.avatar = avatar
+          } else {
+            this.avatar = process.env.VITE_BASE_API + avatar
+          }
+          this.introduction = introduction
+          resolve(response.data)
         })
         .catch((error) => {
           reject(error)
@@ -92,9 +71,9 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout(this.token)
         .then(() => {
-          this.SET_TOKEN('')
-          this.SET_ROLES([])
-          this.SET_PERMISSIONS([])
+          this.token = ''
+          this.roles = []
+          this.permissions = []
           removeToken()
           storage.clear()
           resolve()
@@ -110,7 +89,7 @@ const actions = {
       refreshtoken({ token: this.token })
         .then((response) => {
           const { token } = response
-          this.SET_TOKEN(token)
+          this.token = token
           setToken(token)
           resolve()
         })
@@ -123,7 +102,7 @@ const actions = {
   // remove token
   async resetToken() {
     return await new Promise((resolve) => {
-      this.SET_TOKEN('')
+      this.token = ''
       removeToken()
       resolve()
     })
@@ -135,7 +114,7 @@ const actions = {
     return new Promise(async (resolve) => {
       const token = role + '-token'
 
-      this.SET_TOKEN(token)
+      this.token = token
       setToken(token)
 
       const { roles } = await getInfo()
@@ -170,7 +149,6 @@ const useUserStore = defineStore('userStore', {
     getPermisaction: (state) => state.permisaction
   },
   actions: {
-    ...mutations,
     ...actions
   }
 })

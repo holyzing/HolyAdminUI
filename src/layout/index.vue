@@ -1,7 +1,7 @@
 <template>
-  <div :class="classObj" class="app-wrapper" :style="{'--current-color': $store.state.settings.theme}">
+  <div :class="classObj.value" class="app-wrapper" :style="{'--current-color': settingsStore.theme}">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar class="sidebar-container" :style="{ backgroundColor: $store.state.settings.themeStyle === 'dark' ? variables.menuBg : variables.menuLightBg }" />
+    <side-bar class="sidebar-container" :style="{ backgroundColor: settingsStore.themeStyle === 'dark' ? variables.menuBg : variables.menuLightBg }" />
     <div :class="{hasTagsView:needTagsView}" class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
@@ -15,15 +15,63 @@
   </div>
 </template>
 
-<script>
-import RightPanel from '@/components/RightPanel/index.vue'
-import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components/index.js'
-import ResizeMixin from './mixin/ResizeHandler.js'
-import { mapState } from 'vuex'
+<script setup name="Layout">
+import scss_color_variables from '@/styles/variables.module.scss'; 
+// NOTE 以 module 编译 就不需要 inline 的参数 
+// TODO 两种模式下分别都是啥意思 ？
+import RightPanel from '@/components/RightPanel/index.vue';
+import { AppMain, Navbar, Settings, Sidebar as SideBar, TagsView } from './components/index.js';
+import useResizeHandler from './mixin/ResizeHandler.js';
+// import { mapState } from 'pinia'
+import { storeToRefs } from 'pinia';
+import { computed, onBeforeMount, onMounted, ref } from 'vue';
+import { useAppStore, useSettingsStore } from '@/pinia/index.js';
 // Default and named imports from CSS files are deprecated. Use the ?inline query instead.
-// import variables from '@/styles/variables.scss'
-import variables from '@/styles/variables.scss?inline'
 
+const appStore = useAppStore();
+const settingsStore = useSettingsStore();
+const {sidebar, device} =  storeToRefs(appStore);
+const {showSettings, tagsView: needTagsView, fixedHeader} = storeToRefs(settingsStore);
+
+function beforeMoute() {
+  console.log('------------------ 没什么 卵用------>')
+}
+onBeforeMount(() => {
+  // console.log('----onBeforeMount--->', variables.value.menuBg, classObj.value.mobile, variables.menuBg, classObj.mobile)
+})
+
+onMounted(() => {
+})
+
+const classObj = computed(() => {
+  return {
+    hideSidebar: !sidebar.value.opened,
+    openSidebar: sidebar.value.opened,
+    withoutAnimation: sidebar.value.withoutAnimation,
+    mobile: device === 'mobile'
+  }
+});
+
+// NOTE 手写 computed：https://zhuanlan.zhihu.com/p/533380866
+// NOTE 原理 computed: https://zhuanlan.zhihu.com/p/526991742
+const variables = computed(() => {
+  // get: () => scss_color_variables variables.value is undefined
+  return scss_color_variables
+})
+
+// const variables =  ref(scss_color_variables)
+
+function handleClickOutside() {
+  appStore.closeSideBar({ withoutAnimation: false })
+}
+
+const { $_isMobile, $_resizeHandler } = useResizeHandler(device, sidebar)
+
+// https://github.com/JohnnyZhangQiao/pinia-use/blob/master/src/components/PiniaBasicOptions.vue
+// https://juejin.cn/post/7089032094231298084
+// https://blog.csdn.net/weixin_56663198/article/details/127606215
+
+/**
 export default {
   name: 'Layout',
   components: {
@@ -61,11 +109,12 @@ export default {
     }
   }
 }
+*/
 </script>
 
 <style lang="scss" scoped>
   @import "@/styles/mixin.scss";
-  @import "@/styles/variables.scss";
+  @import "@/styles/variables.module.scss";
 
   .app-wrapper {
     @include clearfix;

@@ -16,7 +16,7 @@ const state = {
 // })
 
 const mutations = {
-  TOGGLE_SIDEBAR: () => {
+  TOGGLE_SIDEBAR: function() {
     this.sidebar.opened = !this.sidebar.opened
     this.sidebar.withoutAnimation = false
     if (this.sidebar.opened) {
@@ -25,15 +25,15 @@ const mutations = {
       Cookies.set('sidebarStatus', 0)
     }
   },
-  CLOSE_SIDEBAR: (withoutAnimation) => {
+  CLOSE_SIDEBAR: function(withoutAnimation) {
     Cookies.set('sidebarStatus', 0)
     this.sidebar.opened = false
     this.sidebar.withoutAnimation = withoutAnimation
   },
-  TOGGLE_DEVICE: (device) => {
+  TOGGLE_DEVICE: function(device) {
     this.device = device
   },
-  SET_SIZE: (size) => {
+  SET_SIZE: function(size) {
     this.size = size
     Cookies.set('size', size)
   }

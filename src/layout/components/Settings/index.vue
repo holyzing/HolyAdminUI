@@ -68,27 +68,36 @@
 
 <script>
 import ThemePicker from '@/components/ThemePicker/index.vue'
+import { useSettingsStore, usePermissionStore } from '@/pinia/index.js'
+import { mapState, mapActions } from 'pinia'
 
 export default {
   components: { ThemePicker },
   data() {
     return {
-      activeColor: this.$store.state.settings.theme
+      activeColor: this.theme
     }
   },
   computed: {
-    theme() {
-      return this.$store.state.settings.theme
-    },
-    themeStyle() {
-      return this.$store.state.settings.themeStyle
-    },
+    // theme() {
+    //   return this.$store.state.settings.theme
+    // },
+    // themeStyle() {
+    //   return this.$store.state.settings.themeStyle
+    // },
+    ...mapState(useSettingsStore, ['theme', 'themeStyle', 'fixedHeader', 'topNav', 'sidebarLogo', 'tagsView']),
+    ...mapState(usePermissionStore, ['defaultRoutes']),
     fixedHeader: {
       get() {
-        return this.$store.state.settings.fixedHeader
+        // return this.$store.state.settings.fixedHeader
+        return this.fixedHeader
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+        // this.$store.dispatch('settings/changeSetting', {
+        //   key: 'fixedHeader',
+        //   value: val
+        // })
+        this.changeSetting({
           key: 'fixedHeader',
           value: val
         })
@@ -96,24 +105,35 @@ export default {
     },
     topNav: {
       get() {
-        return this.$store.state.settings.topNav
+        // return this.$store.state.settings.topNav
+        return this.topNav
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+        // this.$store.dispatch('settings/changeSetting', {
+        //   key: 'topNav',
+        //   value: val
+        // })
+        this.changeSetting({
           key: 'topNav',
           value: val
         })
         if (!val) {
-          this.$store.commit('permission/SET_SIDEBAR_ROUTERS', this.$store.state.permission.defaultRoutes)
+          // this.$store.commit('permission/SET_SIDEBAR_ROUTERS', this.$store.state.permission.defaultRoutes)
+          this.SET_SIDEBAR_ROUTERS(this.defaultRoutes)
         }
       }
     },
     tagsView: {
       get() {
-        return this.$store.state.settings.tagsView
+        // return this.$store.state.settings.tagsView
+        this.tagsView
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+        // this.$store.dispatch('settings/changeSetting', {
+        //   key: 'tagsView',
+        //   value: val
+        // })
+        this.changeSetting({
           key: 'tagsView',
           value: val
         })
@@ -121,10 +141,15 @@ export default {
     },
     sidebarLogo: {
       get() {
-        return this.$store.state.settings.sidebarLogo
+        // return this.$store.state.settings.sidebarLogo
+        this.sidebarLogo
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+        // this.$store.dispatch('settings/changeSetting', {
+        //   key: 'sidebarLogo',
+        //   value: val
+        // })
+        this.changeSetting({
           key: 'sidebarLogo',
           value: val
         })
@@ -132,15 +157,25 @@ export default {
     }
   },
   methods: {
+    ...mapActions(useSettingsStore, ['changeSetting']),
+    ...mapActions(usePermissionStore, ['SET_SIDEBAR_ROUTERS']),
     themeChange(val) {
       this.activeColor = val
-      this.$store.dispatch('settings/changeSetting', {
+      // this.$store.dispatch('settings/changeSetting', {
+      //   key: 'theme',
+      //   value: val
+      // })
+      this.changeSetting({
         key: 'theme',
         value: val
       })
     },
     handleTheme(val) {
-      this.$store.dispatch('settings/changeSetting', {
+      // this.$store.dispatch('settings/changeSetting', {
+      //   key: 'themeStyle',
+      //   value: val
+      // })
+      this.changeSetting({
         key: 'themeStyle',
         value: val
       })

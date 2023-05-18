@@ -6,7 +6,7 @@ const state = {
 }
 
 const mutations = {
-  ADD_VISITED_VIEW: (view) => {
+  ADD_VISITED_VIEW: function(view) {
     if (this.visitedViews.some((v) => v.path === view.path)) return
     this.visitedViews.push(
       Object.assign({}, view, {
@@ -14,14 +14,14 @@ const mutations = {
       })
     )
   },
-  ADD_CACHED_VIEW: (view) => {
+  ADD_CACHED_VIEW: function(view) {
     if (this.cachedViews.includes(view.name)) return
     if (!view.meta.noCache) {
       this.cachedViews.push(view.name)
     }
   },
 
-  DEL_VISITED_VIEW: (view) => {
+  DEL_VISITED_VIEW: function(view) {
     for (const [i, v] of this.visitedViews.entries()) {
       if (v.path === view.path) {
         this.visitedViews.splice(i, 1)
@@ -29,17 +29,17 @@ const mutations = {
       }
     }
   },
-  DEL_CACHED_VIEW: (view) => {
+  DEL_CACHED_VIEW: function(view) {
     const index = this.cachedViews.indexOf(view.name)
     index > -1 && this.cachedViews.splice(index, 1)
   },
 
-  DEL_OTHERS_VISITED_VIEWS: (view) => {
+  DEL_OTHERS_VISITED_VIEWS: function(view) {
     this.visitedViews = this.visitedViews.filter((v) => {
       return v.meta.affix || v.path === view.path
     })
   },
-  DEL_OTHERS_CACHED_VIEWS: (view) => {
+  DEL_OTHERS_CACHED_VIEWS: function(view) {
     if (this.cachedViews.length > 0) {
       const index = this.cachedViews.indexOf(view.name)
       if (index > -1) {
@@ -51,16 +51,16 @@ const mutations = {
     }
   },
 
-  DEL_ALL_VISITED_VIEWS: () => {
+  DEL_ALL_VISITED_VIEWS: function() {
     // keep affix tags
     const affixTags = this.visitedViews.filter((tag) => tag.meta.affix)
     this.visitedViews = affixTags
   },
-  DEL_ALL_CACHED_VIEWS: (state) => {
+  DEL_ALL_CACHED_VIEWS: function() {
     this.cachedViews = []
   },
 
-  UPDATE_VISITED_VIEW: (view) => {
+  UPDATE_VISITED_VIEW: function(view) {
     for (let v of this.visitedViews) {
       if (v.path === view.path) {
         v = Object.assign(v, view)

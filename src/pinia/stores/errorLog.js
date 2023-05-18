@@ -5,10 +5,10 @@ const state = {
 }
 
 const mutations = {
-  ADD_ERROR_LOG: (log) => {
+  ADD_ERROR_LOG: function(log) {
     this.logs.push(log)
   },
-  CLEAR_ERROR_LOG: () => {
+  CLEAR_ERROR_LOG: function() {
     this.logs.splice(0)
   }
 }

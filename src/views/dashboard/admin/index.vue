@@ -90,12 +90,12 @@
 </template>
 
 <script>
-import ChartCard from '@/components/ChartCard'
-import Trend from '@/components/Trend'
-import MiniArea from '@/components/MiniArea'
-import MiniBar from '@/components/MiniBar'
-import MiniProgress from '@/components/MiniProgress'
-import RankList from '@/components/RankList/index'
+import ChartCard from '@/components/ChartCard/index.vue'
+import Trend from '@/components/Trend/index.vue'
+import MiniArea from '@/components/MiniArea/index.vue'
+import MiniBar from '@/components/MiniBar/index.vue'
+import MiniProgress from '@/components/MiniProgress/index.vue'
+import RankList from '@/components/RankList/index.vue'
 import Bar from '@/components/Bar.vue'
 
 const barData = []

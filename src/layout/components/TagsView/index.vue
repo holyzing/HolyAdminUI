@@ -34,7 +34,9 @@
 </template>
 
 <script>
-import path from 'path'
+import path from 'path-browserify'
+import { mapState, mapActions } from 'pinia'
+import { usePermissionStore, useTagsViewStore, useSettingsStore } from '@/pinia'
 
 export default {
   data() {
@@ -48,15 +50,18 @@ export default {
     }
   },
   computed: {
-    visitedViews() {
-      return this.$store.state.tagsView.visitedViews
-    },
-    routes() {
-      return this.$store.state.permission.routes
-    },
-    theme() {
-      return this.$store.state.settings.theme
-    }
+    // visitedViews() {
+    //   return this.$store.state.tagsView.visitedViews
+    // },
+    // routes() {
+    //   return this.$store.state.permission.routes
+    // },
+    // theme() {
+    //   return this.$store.state.settings.theme
+    // }
+    ...mapState(useTagsViewStore, ['visitedViews']),
+    ...mapState(usePermissionStore, ['routes']),
+    ...mapState(useSettingsStore, ['theme'])
   },
   watch: {
     $route() {
@@ -77,6 +82,7 @@ export default {
     this.beforeUnload()
   },
   methods: {
+    ...mapActions(useTagsViewStore, ['addView', 'addVisitedView', 'updateVisitedView', 'delCachedView', 'delView', 'delOthersViews', 'delAllViews']),
     // 刷新前缓存tab
     beforeUnload() {
       // 监听页面刷新
@@ -98,14 +104,20 @@ export default {
       // 页面初始化加载判断缓存中是否有数据
       const oldViews = JSON.parse(sessionStorage.getItem('tabViews')) || []
       if (oldViews.length > 0) {
-        this.$store.state.tagsView.visitedViews = oldViews
+        // this.$store.state.tagsView.visitedViews = oldViews
+        const tagsViewStore = useTagsViewStore()
+        tagsViewStore.visitedViews = oldViews
       }
     },
     handleTagsOver(index) {
       const tags = document.querySelectorAll('.tags-item')
       const item = tags[index - 1]
-      item.style.cssText = `color:${this.$store.state.settings.theme};background:${
-        this.$store.state.settings.theme.colorRgb()
+      const settingsStore = useSettingsStore()
+      // item.style.cssText = `color:${this.$store.state.settings.theme};background:${
+      //   this.$store.state.settings.theme.colorRgb()
+      // }`
+      item.style.cssText = `color:${settingsStore.theme};background:${
+        settingsStore.theme.colorRgb()
       }`
     },
     handleTagsLeave(index) {
@@ -147,14 +159,16 @@ export default {
       for (const tag of affixTags) {
         // Must have tag name
         if (tag.name) {
-          this.$store.dispatch('tagsView/addVisitedView', tag)
+          // this.$store.dispatch('tagsView/addVisitedView', tag)
+          this.addVisitedView(tag)
         }
       }
     },
     addTags() {
       const { name } = this.$route
       if (name) {
-        this.$store.dispatch('tagsView/addView', this.$route)
+        // this.$store.dispatch('tagsView/addView', this.$route)
+        this.addView(this.$route)
         this.isActive()
       }
       return false
@@ -167,7 +181,8 @@ export default {
             // this.$refs.scrollPane.moveToTarget(tag)
             // when query is different then update
             if (tag.to.fullPath !== this.$route.fullPath) {
-              this.$store.dispatch('tagsView/updateVisitedView', this.$route)
+              // this.$store.dispatch('tagsView/updateVisitedView', this.$route)
+              this.updateVisitedView(this.$route)
             }
             break
           }
@@ -175,7 +190,8 @@ export default {
       })
     },
     refreshSelectedTag(view) {
-      this.$store.dispatch('tagsView/delCachedView', view).then(() => {
+      // this.$store.dispatch('tagsView/delCachedView', view).then(() => {
+      this.delCachedView(view).then(() => {
         const { fullPath } = view
         this.$nextTick(() => {
           this.$router.replace({
@@ -189,7 +205,8 @@ export default {
       const index = this.visitedViews.findIndex(item => item.fullPath === routerPath)
       if (index > -1) {
         const path = this.visitedViews[index]
-        this.$store.dispatch('tagsView/delView', path).then(({ visitedViews }) => {
+        // 
+        this.delView(path).then(({ visitedViews }) => {
           if (this.editableTabsValue === path.fullPath) {
             this.toLastView(visitedViews, path)
           }
@@ -198,12 +215,14 @@ export default {
     },
     closeOthersTags() {
       this.$router.push(this.selectedTag.path).catch(e => e)
-      this.$store.dispatch('tagsView/delOthersViews', this.selectedTag).then(() => {
+      // this.$store.dispatch('tagsView/delOthersViews', this.selectedTag).then(() => {
+      this.delOthersViews(this.selectedTag).then(() => {
         this.moveToCurrentTag()
       })
     },
     closeAllTags(view) {
-      this.$store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
+      // this.$store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
+        this.delAllViews().then(({ visitedViews }) => {
         if (this.affixTags.some(tag => tag.path === view.path)) {
           return
         }

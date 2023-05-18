@@ -14,7 +14,7 @@
     </template>
 
     <!-- 顶部菜单超出数量折叠 -->
-    <el-submenu v-if="topMenus.length > visibleNumber" index="more">
+    <el-sub-menu v-if="topMenus.length > visibleNumber" index="more">
       <template slot="title">更多菜单</template>
       <template v-for="(item, index) in topMenus">
         <el-menu-item
@@ -24,12 +24,14 @@
         ><svg-icon :icon-class="item.meta.icon" />
           {{ item.meta.title }}</el-menu-item>
       </template>
-    </el-submenu>
+    </el-sub-menu>
   </el-menu>
 </template>
 
 <script>
 import { constantRoutes } from '@/router'
+import { mapState, mapActions } from 'pinia'
+import { usePermissionStore } from '@/pinia/index.js'
 
 export default {
   data() {
@@ -42,6 +44,7 @@ export default {
   },
   computed: {
     // 顶部显示菜单
+    ...mapState(usePermissionStore, ['topbarRouters']),
     topMenus() {
       return this.routers.map((menu) => ({
         ...menu,
@@ -50,7 +53,8 @@ export default {
     },
     // 所有的路由信息
     routers() {
-      return this.$store.state.permission.topbarRouters
+      // return this.$store.state.permission.topbarRouters
+      return this.topbarRouters
     },
     // 设置子路由
     childrenMenus() {
@@ -88,17 +92,14 @@ export default {
     this.setVisibleNumber()
   },
   methods: {
+    ...mapActions(usePermissionStore, ['SET_SIDEBAR_ROUTERS']),
     // 根据宽度计算设置显示栏数
     setVisibleNumber() {
       const width = document.body.getBoundingClientRect().width - 200
       const elWidth = this.$el.getBoundingClientRect().width
       const menuItemNodes = this.$el.children
-      const menuWidth = Array.from(menuItemNodes).map(
-        (i) => i.getBoundingClientRect().width
-      )
-      this.visibleNumber = (
-        parseInt(width - elWidth) / parseInt(menuWidth)
-      ).toFixed(0)
+      const menuWidth = Array.from(menuItemNodes).map((i) => i.getBoundingClientRect().width)
+      this.visibleNumber = (parseInt(width - elWidth) / parseInt(menuWidth)).toFixed(0)
     },
     // 菜单选择事件
     handleSelect(key, keyPath) {
@@ -119,7 +120,8 @@ export default {
           }
         })
       }
-      this.$store.commit('permission/SET_SIDEBAR_ROUTERS', routes)
+      // this.$store.commit('permission/SET_SIDEBAR_ROUTERS', routes)
+      this.SET_SIDEBAR_ROUTERS(routes)
     }
   }
 }

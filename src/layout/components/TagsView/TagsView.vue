@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import path from 'path'
+import path from 'path-browserify'
 export default {
   name: 'TagsView',
   data() {

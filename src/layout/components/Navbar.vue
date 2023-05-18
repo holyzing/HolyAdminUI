@@ -2,8 +2,8 @@
   <div class="navbar">
     <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
-    <breadcrumb v-if="!topNav" id="breadcrumb-container" class="breadcrumb-container" />
-    <top-nav v-if="topNav" id="topmenu-container" class="breadcrumb-container" />
+    <breadcrumb v-if="!isTopNav" id="breadcrumb-container" class="breadcrumb-container" />
+    <top-nav v-if="isTopNav" id="topmenu-container" class="breadcrumb-container" />
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
@@ -32,7 +32,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+// import { mapGetters } from 'vuex'
+import { RouterLink } from 'vue-router'
+import { useAppStore, useSettingsStore, useUserStore } from '@/pinia/index.js'
+import { mapState, mapActions } from 'pinia'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import TopNav from '@/components/TopNav/index.vue'
 import Hamburger from '@/components/Hamburger/index.vue'
@@ -48,32 +51,40 @@ export default {
     Search
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
+    ...mapState(useAppStore, [
+      'sidebar', 'device'
+    ]),
+    ...mapState(useUserStore, [
       'avatar',
-      'device'
+    ]),
+    ...mapState(useSettingsStore, [
+      'showSettings', 'topNav'
     ]),
     setting: {
       get() {
-        return this.$store.state.settings.showSettings
+        return this.showSettings
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+        this.changeSetting({
           key: 'showSettings',
           value: val
         })
       }
     },
-    topNav: {
+    isTopNav: {
       get() {
-        return this.$store.state.settings.topNav
+        return this.topNav
       }
     }
 
   },
   methods: {
+    ...mapActions(useSettingsStore, ['changeSetting']),
+    ...mapActions(useAppStore, ['toggleSideBar']),
+    ...mapActions(useUserStore, ['LogOut']),
+
     toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
+      this.toggleSideBar()
     },
     async logout() {
       this.$confirm('确定注销并退出系统吗？', '提示', {
@@ -81,7 +92,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$store.dispatch('user/LogOut').then(() => {
+        this.LogOut().then(() => {
           location.reload()
         })
       })

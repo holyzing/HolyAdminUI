@@ -5,7 +5,7 @@ import { getToken } from '@/utils/auth'
 import { useUserStore } from '@/pinia'
 // create an axios instance
 
-console.log(process.env, import.meta.env)
+// console.log(process.env, import.meta.env)
 const service = axios.create({
   baseURL: process.env.VITE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests

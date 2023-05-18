@@ -5,9 +5,11 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import adminDashboard from './admin'
-import editorDashboard from './editor'
+// import { mapGetters } from 'vuex'
+import adminDashboard from './admin/index.vue'
+import editorDashboard from './editor/index.vue'
+import { useUserStore } from '@/pinia/index.js'
+import { mapState } from 'pinia'
 
 export default {
   name: 'Dashboard',
@@ -18,9 +20,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'roles'
-    ])
+    // ...mapGetters([
+    //   'roles'
+    // ])
+    ...mapState(useUserStore, ['roles'])
   },
   created() {
     // if (!this.roles.includes('admin')) {

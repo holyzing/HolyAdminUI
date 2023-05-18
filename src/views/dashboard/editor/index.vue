@@ -18,9 +18,11 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import PanThumb from '@/components/PanThumb'
-import GithubCorner from '@/components/GithubCorner'
+// import { mapGetters } from 'vuex'
+import PanThumb from '@/components/PanThumb/index.vue'
+import GithubCorner from '@/components/GithubCorner/index.vue'
+import { mapState } from 'pinia'
+import { useUserStore } from '@/pinia'
 
 export default {
   name: 'DashboardEditor',
@@ -31,11 +33,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'name',
-      'avatar',
-      'roles'
-    ])
+    // ...mapGetters([
+    //   'name',
+    //   'avatar',
+    //   'roles'
+    // ])
+    ...mapState(useUserStore, ['name', 'avatar', 'roles'])
   }
 }
 </script>

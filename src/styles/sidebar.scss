@@ -67,6 +67,7 @@
     }
 
     .el-menu-item,
+    // BEM https://zhuanlan.zhihu.com/p/524640605
     .el-submenu__title {
       overflow: hidden !important;
       text-overflow: ellipsis !important;

@@ -15,6 +15,9 @@
 const version = import.meta.glob('element-plus/package.json').version
 const ORIGINAL_THEME = '#1890FF' // default color
 
+import { useSettingsStore } from '@/pinia/index.js'
+import { mapState } from 'pinia'
+
 export default {
   data() {
     return {
@@ -24,7 +27,9 @@ export default {
   },
   computed: {
     defaultTheme() {
-      return this.$store.state.settings.theme
+      // return this.$store.state.settings.theme
+      // return mapState(useSettingsStore, ['theme']).theme
+      return useSettingsStore().theme
     }
   },
   watch: {

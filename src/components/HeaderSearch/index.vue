@@ -21,7 +21,9 @@
 // fuse is a lightweight fuzzy-search module
 // make search results more in line with expectations
 import Fuse from 'fuse.js'
-import path from 'path'
+import path from 'path-browserify'
+import { mapState } from 'pinia'
+import { usePermissionStore } from '@/pinia/index.js'
 
 export default {
   name: 'HeaderSearch',
@@ -35,13 +37,15 @@ export default {
     }
   },
   computed: {
-    routes() {
-      return this.$store.getters.permission_routes
+    ...mapState(usePermissionStore, ['routes']),
+    Routes() {
+      // return this.$store.getters.permission_routes
+      return this.routes
     }
   },
   watch: {
-    routes() {
-      this.searchPool = this.generateRoutes(this.routes)
+    Routes() {
+      this.searchPool = this.generateRoutes(this.Routes)
     },
     searchPool(list) {
       this.initFuse(list)
@@ -55,7 +59,7 @@ export default {
     }
   },
   mounted() {
-    this.searchPool = this.generateRoutes(this.routes)
+    this.searchPool = this.generateRoutes(this.Routes)
   },
   methods: {
     click() {

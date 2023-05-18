@@ -1,13 +1,24 @@
 
 <template>
   <!-- eslint-disable vue/require-component-is -->
+  <!-- 
   <component v-bind="linkProps(to)">
     <slot />
   </component>
+  -->
+ 
+  <component  v-if="isExternalUrl(to)"  :is="'a'" :href="to" target="_blank" rel="noopener">
+    <slot />
+  </component>
+  <component  v-else :is="'RouterLink'" :to="to">
+    <slot />
+  </component>
+
 </template>
 
 <script>
-import { isExternal } from '@/utils/validate'
+import { isExternal } from '@/utils/validate.js'
+import { RouterLink } from 'vue-router'
 
 export default {
   props: {
@@ -16,6 +27,7 @@ export default {
       required: true
     }
   },
+  components: [RouterLink],
   methods: {
     linkProps(url) {
       if (isExternal(url)) {
@@ -26,10 +38,15 @@ export default {
           rel: 'noopener'
         }
       }
+      console.log("---------------->", url)
       return {
         is: 'router-link',
         to: url
       }
+    },
+
+    isExternalUrl(url) {
+      return isExternal(url)
     }
   }
 }

@@ -1,22 +1,26 @@
 <template>
-  <div class="sidebar-logo-container" :class="{'collapse':collapse}" :style="{ backgroundColor: $store.state.settings.themeStyle === 'dark' ? variables.menuBg : variables.menuLightBg }">
-    <transition name="sidebarLogoFade">
+  <div class="sidebar-logo-container" :class="{'collapse':collapse}" :style="{ backgroundColor: themeStyle === 'dark' ? variables.menuBg : variables.menuLightBg }">
+    <Transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
         <img v-if="appInfo.sys_app_logo" :src="appInfo.sys_app_logo" class="sidebar-logo">
-        <h1 v-else class="sidebar-title" :style="{ color: $store.state.settings.themeStyle === 'dark' ? variables.sidebarTitle : variables.sidebarLightTitle }">{{ appInfo.sys_app_name }} </h1>
+        <h1 v-else class="sidebar-title" :style="{ color: themeStyle === 'dark' ? variables.sidebarTitle : variables.sidebarLightTitle }">{{ appInfo.sys_app_name }} </h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img v-if="appInfo.sys_app_logo" :src="appInfo.sys_app_logo" class="sidebar-logo">
-        <h1 class="sidebar-title" :style="{ color: $store.state.settings.themeStyle === 'dark' ? variables.sidebarTitle : variables.sidebarLightTitle }">{{ appInfo.sys_app_name }} </h1>
+        <h1 class="sidebar-title" :style="{ color: themeStyle === 'dark' ? variables.sidebarTitle : variables.sidebarLightTitle }">{{ appInfo.sys_app_name }} </h1>
       </router-link>
-    </transition>
+    </Transition>
   </div>
 </template>
 
 <script>
 
-import variables from '@/styles/variables.scss?inline'
-import { mapGetters } from 'vuex'
+import scss_corlor_variables from '@/styles/variables.module.scss'
+// import { mapGetters } from 'vuex'
+import { mapState } from 'pinia';
+import { useSystemStore, useSettingsStore } from '@/pinia';
+import { RouterLink } from 'vue-router';
+import { Transition } from 'vue';
 
 export default {
   name: 'SidebarLogo',
@@ -27,11 +31,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'appInfo'
-    ]),
+    // ...mapGetters([
+    //   'appInfo'
+    // ]),
+    ...mapState(useSystemStore, ['info']),
+    ...mapState(useSettingsStore, ['themeStyle']),
     variables() {
-      return variables
+      return scss_corlor_variables
+    },
+    appInfo() {
+      return this.info
     }
   }
 }

@@ -5,7 +5,10 @@
         "@/*": ["src/*"]
     }
   },
+  "target": "ES6",
+  "module": "commonjs",
   "exclude": ["node_modules", "dist"],
+  "allowSyntheticDefaultImports": true,
   "vueCompilerOptions": {
     "optionsWrapper": [
         "(await import('vue')).defineComponent(",

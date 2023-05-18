@@ -3,6 +3,7 @@ import { getRoutes } from '@/api/admin/sys-role'
 import Layout from '@/layout/index.vue'
 import { defineStore } from 'pinia'
 // import sysuserindex from '@/views/sysuser/index'
+import { defineAsyncComponent, resolveDynamicComponent } from 'vue'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -57,7 +58,22 @@ export function generaMenu(routes, data) {
 
 export const loadView = (view) => {
   // 路由懒加载
-  return (resolve) => require([`@/views${view}`], resolve)
+  if (view.endsWith('.vue')) {
+    view = view.substring(0, view.length-1-4)
+  }
+
+  // return (resolve) => require([`@/views${view}`], resolve)
+
+  // NOTE vite 动态导入不识别 @ ？
+  // NOTE The above dynamic import cannot be analyzed by Vite.
+  // NOTE Plugin: vite:import-analysis
+  // return defineAsyncComponent(() => import(`../../views${view}`))
+  // return defineAsyncComponent(() =>import.meta.glob(`../../views${view}`))
+  // return import(`../../views${view}.vue`)
+  // return defineAsyncComponent(() => import(`@/views${view}.vue`))
+
+  // TODO 如何更好的在运行时，动态导入组件 ？
+  return () => import(`@/views${view}.vue`)
 }
 
 /**
@@ -111,14 +127,14 @@ const state = {
 }
 
 const mutations = {
-  SET_ROUTES: (routes) => {
+  SET_ROUTES: function(routes) {
     this.addRoutes = routes
     this.routes = constantRoutes.concat(routes)
   },
-  SET_DEFAULT_ROUTES: (routes) => {
+  SET_DEFAULT_ROUTES: function(routes) {
     this.defaultRoutes = constantRoutes.concat(routes)
   },
-  SET_TOPBAR_ROUTES: (routes) => {
+  SET_TOPBAR_ROUTES: function(routes) {
     // 顶部导航菜单默认添加统计报表栏指向首页
     // const index = [{
     //   path: 'dashboard',
@@ -126,7 +142,7 @@ const mutations = {
     // }]
     this.topbarRouters = routes // .concat(index)
   },
-  SET_SIDEBAR_ROUTERS: (routes) => {
+  SET_SIDEBAR_ROUTERS: function(routes) {
     this.sidebarRouters = routes
   }
 }

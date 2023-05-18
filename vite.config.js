@@ -1,17 +1,23 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import path from 'node:path'
+
+import vueJsx from "@vitejs/plugin-vue-jsx";
+import vueSetupExtend from 'vite-plugin-vue-setup-extend'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
+    vueJsx(),
+    vueSetupExtend(),
     createSvgIconsPlugin({
         iconDirs: [path.resolve(process.cwd(), 'src/icons/svg/')],
         symbolId: 'icon-[dir]-[name]',
-    })
+    }),
   ],
   server: {
     host: '0.0.0.0'
@@ -30,5 +36,17 @@ export default defineConfig({
     //   )
       // / '~': fileURLToPath(new URL('./node_modules', import.meta.url))
     }
+  },
+  css: {
+    modules: {
+
+    },
+    // vite-svg-loader
+    preprocessorOptions: {
+      scss: {
+        javascriptEnabled: true
+      }
+    }
   }
 })
+// cd ~/Xtalpi/Golang/GoAdmin/go-admin && ./go-admin server -c config/settings.sqlite.yml

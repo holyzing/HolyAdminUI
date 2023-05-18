@@ -13,7 +13,7 @@ import 'remixicon/fonts/remixicon.css'
 import Cookies from 'js-cookie' // NOTE 处理 cookie 的工具库
 // import Element from 'element-ui'          // NOTE 基于 vue2 的强大的 UI 组件库， Vue3 使用 element-plus
 import 'element-plus/dist/index.css'
-import Element from 'element-plus' // NOTE 基于 vue3 的强大的 UI 组件库   https://element-plus.gitee.io/zh-CN/guide/design.html
+import ElementPlus from 'element-plus' // NOTE 基于 vue3 的强大的 UI 组件库   https://element-plus.gitee.io/zh-CN/guide/design.html
 // import VueParticles from 'vue-particles'  // NOTE 2018年 最后一次更新的 动态粒子特效插件，并没有说明支持 vue3，使用 particles.vue3 代替
 import VueParticles from 'particles.vue3' // NOTE 依赖 vue-particles 实现的 支持 Vue3 的动态粒子特效
 import VueCodemirror from 'vue-codemirror' // NOTE 封装了 codemirror 的 vue 组件
@@ -38,7 +38,7 @@ import permission from './directive/permission/index.js'
 // import './icons/index.js' // 引入 icons
 import './permission.js' // permission control
 import './utils/error-log.js' // error log
-import './styles/element-variables.scss'
+import './styles/element-variables.module.scss'
 // ------------------------------------------------------------------
 
 import { getDicts } from '@/api/admin/dict/data.js'
@@ -63,15 +63,15 @@ import SvgIcon from '@/components/SvgIcon/index.vue'// svg component
 const app = createApp(App)
 
 // 处理所有后代组件的错误
-app.config.errorHandler = (err) => {
-  // TODO handle all error
-  console.log(err)
-}
+// app.config.errorHandler = (err, instance, info) => {
+//   // TODO handle all error
+//   console.log(err, info)
+// }
 
-app.config.warnHandler = (warn) => {
-  // TODO handle all error
-  console.log(warn)
-}
+// app.config.warnHandler = (msg, trace) => {
+//   // TODO handle all error
+//   console.log(msg, instance, trace)
+// }
 
 // 全局方法挂载 https://blog.csdn.net/m0_63969219/article/details/124579365
 // VUE2 Vue.prototype.getDicts = getDicts
@@ -98,7 +98,7 @@ app.use(createPinia())
 // app.use(VueDND)
 app.use(VueParticles)
 app.use(VueCodemirror)
-app.use(Element, { size: Cookies.get('size') || 'medium' }) // set element-ui default size
+app.use(ElementPlus, { size: Cookies.get('size') || 'default' }) // set element-ui default size
 
 // 挂载全局组件
 // VUE2 Vue.component('Pagination', Pagination)

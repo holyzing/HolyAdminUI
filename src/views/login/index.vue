@@ -190,7 +190,7 @@
 import { getCodeImg } from '@/api/login'
 import moment from 'moment'
 import SocialSign from './components/SocialSignin.vue'
-import { useSystemStore } from '@/pinia'
+import { useSystemStore, useUserStore } from '@/pinia/index.js'
 // NOTE 选项式 API 不能做该类引用
 // import loginLogo from '@/assets/logo/logo.png'
 import { User } from '@element-plus/icons-vue'
@@ -313,11 +313,13 @@ export default {
       })
     },
     handleLogin() {
+      // TODO 这个 valid 是怎么来的 ？
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true
-          this.$store
-            .dispatch('user/login', this.loginForm)
+          const userStore = useUserStore()
+          // this.$store.dispatch('user/login', )
+          userStore.login(this.loginForm)
             .then(() => {
               this.$router
                 .push({ path: this.redirect || '/', query: this.otherQuery })

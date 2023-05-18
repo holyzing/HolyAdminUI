@@ -1,4 +1,4 @@
-import router from './router'
+import router from './router/index.js'
 import { useUserStore, usePermissionStore } from './pinia/index.js'
 import { ElMessage } from 'element-plus'
 import NProgress from 'nprogress' // NOTE: 8年前构建的虚假进度条工具包
@@ -44,8 +44,12 @@ router.beforeEach(async(to, from, next) => {
           // const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
           const accessRoutes = await permissionStore.generateRoutes(roles)
 
+          for (let index = 0; index < accessRoutes.length; index++) {
+            router.addRoute(accessRoutes[index])
+          }
+          // NOTE: Vue4 已经没有了该方法
           // dynamically add accessible routes
-          router.addRoutes(accessRoutes)
+          // router.addRoutes(accessRoutes)
 
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record

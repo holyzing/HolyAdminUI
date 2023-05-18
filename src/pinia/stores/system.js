@@ -7,12 +7,19 @@ const state = {
 
 const mutations = {
 //   SET_INFO(data) => {
-// 箭头函数 无法注入 this
+// NOTE 箭头函数 无法注入 this
 // https://blog.csdn.net/xu4321083/article/details/79753800
   SET_INFO(data) {
     this.info = data
     storage.set('app_info', data)
-  }
+  },
+
+  // NOTE：函数的几种写法
+  /*
+  SET_INFO_1: function(data) {},
+  SET_INFO_2: (data) => {},
+  SET_INFO_3 (data) {}
+  */
 }
 
 const actions = {

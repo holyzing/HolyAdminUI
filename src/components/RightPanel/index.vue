@@ -13,7 +13,9 @@
 </template>
 
 <script>
-import { addClass, removeClass } from '@/utils'
+import { addClass, removeClass } from '@/utils/index.js'
+import { mapState } from 'pinia'
+import { useSettingsStore } from '@/pinia/index.js'
 
 export default {
   name: 'RightPanel',
@@ -33,9 +35,10 @@ export default {
     }
   },
   computed: {
-    theme() {
-      return this.$store.state.settings.theme
-    }
+    ...mapState(useSettingsStore, ['theme'])
+    // theme() {
+    //   return this.$store.state.settings.theme
+    // }
   },
   watch: {
     show(value) {

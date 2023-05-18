@@ -1,4 +1,4 @@
-import variables from '@/styles/element-variables.scss?inline'
+import variables from '@/styles/element-variables.module.scss'
 import defaultSettings from '@/settings.js'
 import { defineStore } from 'pinia'
 
@@ -14,25 +14,18 @@ const state = {
   themeStyle: themeStyle
 }
 
-const mutations = {
-  CHANGE_SETTING: ({ key, value }) => {
-    // eslint-disable-next-line no-prototype-builtins
-    if (this.hasOwnProperty(key)) {
-      state[key] = value
-    }
-  }
-}
-
 const actions = {
   changeSetting(data) {
-    this.CHANGE_SETTING(data)
+    const {key, value} = data
+    if (this.hasOwnProperty(key)) {
+        this[key] = value
+    }
   }
 }
 
 const useSettingsStore = defineStore('settingsStore', {
   state: () => state,
   actions: {
-    ...mutations,
     ...actions
   }
 })
